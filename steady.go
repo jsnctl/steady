@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/jsnctl/steady/draw"
 	"helm.sh/helm/v3/pkg/chart/loader"
+	"strings"
 )
 
 const DefaultChart = "charts/example"
@@ -18,9 +20,18 @@ func main() {
 		fmt.Errorf(err.Error())
 	}
 
+	tree := draw.Tree{}
 	for _, f := range chart.Raw {
-		fmt.Printf("    |    \n")
-		fmt.Printf("|" + f.Name + "|\n")
-		fmt.Printf("    |    \n")
+		split := strings.Split(f.Name, "/")
+		node := draw.Node{Name: split[0]}
+		if len(split) > 0 {
+			for _, s := range split[1:] {
+				child := draw.Node{Name: s}
+				node.AddChild(&child)
+			}
+		}
+		tree.AddNode(&node)
 	}
+
+	tree.Draw()
 }

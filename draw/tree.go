@@ -12,11 +12,12 @@ func (t *Tree) AddNode(node *Node) {
 
 func (t *Tree) Draw() {
 	for _, n := range t.Nodes {
-		fmt.Print(n.Name + "->(")
-
+		fmt.Println(n.Name)
 		for _, c := range n.Children {
-			fmt.Print(c.Name + ",")
+			fmt.Print("   \\   ")
+			fmt.Println("")
+			fmt.Print("    " + c.Name)
 		}
-		fmt.Print(")\n")
+		fmt.Print("\n")
 	}
 }
