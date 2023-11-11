@@ -1,13 +1,25 @@
 package draw
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 type Tree struct {
 	Nodes []*Node
 }
 
+func (t *Tree) checkNodeExists(node *Node) bool {
+	if slices.Contains(t.Nodes, node) {
+		return true
+	}
+	return false
+}
+
 func (t *Tree) AddNode(node *Node) {
-	t.Nodes = append(t.Nodes, node)
+	if !t.checkNodeExists(node) {
+		t.Nodes = append(t.Nodes, node)
+	}
 }
 
 func (t *Tree) Draw() {
