@@ -10,6 +10,7 @@ func TestNode(t *testing.T) {
 	B := Node{Name: "B"}
 	C := Node{Name: "C"}
 	D := Node{Name: "D"}
+	E := Node{Name: "E"}
 
 	A.AddChild(&B)
 	A.AddChild(&C)
@@ -18,6 +19,8 @@ func TestNode(t *testing.T) {
 	assert.Equal(t, 2, len(A.Children))
 	assert.Equal(t, 1, len(C.Children))
 
-	tree := Tree{Nodes: []*Node{&A, &B, &C, &D}}
-	tree.Draw()
+	assert.True(t, IsNodeInTree(&A, &D))
+	assert.True(t, IsNodeInTree(&A, &C))
+	assert.False(t, IsNodeInTree(&A, &E))
+	assert.False(t, IsNodeInTree(&C, &A))
 }

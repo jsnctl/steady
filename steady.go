@@ -20,18 +20,17 @@ func main() {
 		fmt.Errorf(err.Error())
 	}
 
-	tree := draw.Tree{}
+	root := draw.Node{Name: "root"}
 	for _, f := range chart.Raw {
 		split := strings.Split(f.Name, "/")
 		node := draw.Node{Name: split[0]}
+		root.AddChild(&node)
 		if len(split) > 0 {
 			for _, s := range split[1:] {
 				child := draw.Node{Name: s}
 				node.AddChild(&child)
 			}
 		}
-		tree.AddNode(&node)
 	}
-
-	tree.Draw()
+	fmt.Println("!!!")
 }
