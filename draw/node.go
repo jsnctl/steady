@@ -7,14 +7,14 @@ type Node struct {
 }
 
 func (n *Node) AddChild(child *Node) {
-	if n.Root == nil {
+	if n.Root == nil { // case where node is root
+		n.Root = n
 		child.Root = n
-		n.Children = append(n.Children, child)
-		return
+	} else {
+		child.Root = n.Root
 	}
 
 	if !IsNodeInTree(n.Root, child) {
-		child.Root = n.Root
 		n.Children = append(n.Children, child)
 	}
 }
