@@ -47,6 +47,16 @@ func TestIsNodeInTree(t *testing.T) {
 	assert.True(t, IsNodeInTree(tree.nodes["A"], tree.nodes["C"]))
 	assert.False(t, IsNodeInTree(tree.nodes["A"], tree.nodes["E"]))
 	assert.False(t, IsNodeInTree(tree.nodes["C"], tree.nodes["A"]))
+
+	/*
+			 A
+			/ \
+		   B   C
+			  /	\
+			 D	 E
+	*/
+	tree.nodes["C"].AddChild(tree.nodes["E"])
+	assert.True(t, IsNodeInTree(tree.nodes["A"], tree.nodes["E"]))
 }
 
 func TestAddChild_IsIdempotent(t *testing.T) {
@@ -71,6 +81,5 @@ func TestAddChild_MultipleChildrenOfNonRoot(t *testing.T) {
 			 D	 E
 	*/
 	tree.nodes["C"].AddChild(tree.nodes["E"])
-
 	assert.Equal(t, 2, len(tree.nodes["C"].Children))
 }
