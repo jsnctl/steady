@@ -83,3 +83,13 @@ func TestAddChild_MultipleChildrenOfNonRoot(t *testing.T) {
 	tree.nodes["C"].AddChild(tree.nodes["E"])
 	assert.Equal(t, 2, len(tree.nodes["C"].Children))
 }
+
+func TestFlatTreeToTree(t *testing.T) {
+	flatTree := [][]string{
+		{"A", "B"},
+		{"A", "C", "D"},
+		{"A", "C", "E"},
+	}
+	tree := FlatTreeToTree(flatTree)
+	assert.NotNil(t, tree)
+}

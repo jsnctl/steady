@@ -32,3 +32,26 @@ func IsNodeInTree(root *Node, node *Node) bool {
 
 	return false
 }
+
+func FlatTreeToTree(flatTree [][]string) [][]*Node {
+	var tree [][]*Node
+	for branchIndex, branch := range flatTree {
+		tree = append(tree, make([]*Node, len(branch)))
+		for nodeIndex, nodeName := range branch {
+			if nodeIndex == 0 {
+				tree[branchIndex][nodeIndex] = &Node{
+					Name: nodeName,
+					Root: nil,
+				}
+			} else {
+				tree[branchIndex][nodeIndex] = &Node{
+					Name: nodeName,
+					Root: tree[branchIndex][nodeIndex-1],
+				}
+			}
+
+			// TODO: add children nodes
+		}
+	}
+	return tree
+}
