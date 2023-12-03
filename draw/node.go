@@ -1,57 +1,60 @@
 package draw
 
+import (
+	"fmt"
+	"strings"
+)
+
 type Node struct {
 	Name     string
-	Root     *Node
 	Children []*Node
 }
 
-func (n *Node) AddChild(child *Node) {
-	if n.Root == nil { // case where node is root
-		n.Root = n
-		child.Root = n
-	} else {
-		child.Root = n.Root
-	}
+const RootName = "ROOT"
 
-	if !IsNodeInTree(n.Root, child) {
-		n.Children = append(n.Children, child)
-	}
-}
-
-func IsNodeInTree(root *Node, node *Node) bool {
-	if root.Name == node.Name {
-		return true
-	}
-
-	for _, child := range root.Children {
-		if IsNodeInTree(child, node) {
-			return true
+func (n *Node) AddChild(prospective *Node) {
+	for _, child := range n.Children {
+		if child.Name == prospective.Name {
+			child.Children = append(child.Children, prospective.Children...)
+			return
 		}
 	}
-
-	return false
+	n.Children = append(n.Children, prospective)
 }
 
-func FlatTreeToTree(flatTree [][]string) [][]*Node {
-	var tree [][]*Node
+func FlatTreeToTree(flatTree [][]string) *Node {
+	var flatNodes [][]*Node
 	for branchIndex, branch := range flatTree {
-		tree = append(tree, make([]*Node, len(branch)))
+		flatNodes = append(flatNodes, make([]*Node, len(branch)))
 		for nodeIndex, nodeName := range branch {
-			if nodeIndex == 0 {
-				tree[branchIndex][nodeIndex] = &Node{
-					Name: nodeName,
-					Root: nil,
-				}
-			} else {
-				tree[branchIndex][nodeIndex] = &Node{
-					Name: nodeName,
-					Root: tree[branchIndex][nodeIndex-1],
-				}
+			flatNodes[branchIndex][nodeIndex] = &Node{
+				Name: nodeName,
 			}
-
-			// TODO: add children nodes
 		}
 	}
-	return tree
+	tree := Node{Name: RootName}
+	pointer := &tree
+	for branchIndex, branch := range flatTree {
+		pointer = &tree
+		for nodeIndex := range branch {
+			pointer.AddChild(flatNodes[branchIndex][nodeIndex])
+			newPointer := pointer.Children[len(pointer.Children)-1]
+			pointer = newPointer
+		}
+	}
+
+	return &tree
+}
+
+func Draw(node *Node, shift int) {
+	if node.Name != RootName {
+		if shift <= 1 {
+			fmt.Println(strings.Repeat(" ", shift*5), node.Name)
+		} else {
+			fmt.Println(strings.Repeat(" ", shift*5), "\\ "+node.Name)
+		}
+	}
+	for _, node := range node.Children {
+		Draw(node, shift+1)
+	}
 }

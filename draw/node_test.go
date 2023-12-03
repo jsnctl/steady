@@ -40,25 +40,6 @@ func TestNode(t *testing.T) {
 
 }
 
-func TestIsNodeInTree(t *testing.T) {
-	tree := testTree()
-
-	assert.True(t, IsNodeInTree(tree.nodes["A"], tree.nodes["D"]))
-	assert.True(t, IsNodeInTree(tree.nodes["A"], tree.nodes["C"]))
-	assert.False(t, IsNodeInTree(tree.nodes["A"], tree.nodes["E"]))
-	assert.False(t, IsNodeInTree(tree.nodes["C"], tree.nodes["A"]))
-
-	/*
-			 A
-			/ \
-		   B   C
-			  /	\
-			 D	 E
-	*/
-	tree.nodes["C"].AddChild(tree.nodes["E"])
-	assert.True(t, IsNodeInTree(tree.nodes["A"], tree.nodes["E"]))
-}
-
 func TestAddChild_IsIdempotent(t *testing.T) {
 	tree := testTree()
 
@@ -91,5 +72,31 @@ func TestFlatTreeToTree(t *testing.T) {
 		{"A", "C", "E"},
 	}
 	tree := FlatTreeToTree(flatTree)
-	assert.NotNil(t, tree)
+	assert.Equal(t, 2, len(tree.Children[0].Children))             // B, C
+	assert.Equal(t, 2, len(tree.Children[0].Children[1].Children)) // D, E
+
+	/*
+				 A				K
+				/|\			   / \
+			   B C D		  L	  M
+			  /	  /	\
+			 E	 F	 G
+					/|\
+		           H I J
+	*/
+	deeperFlatTree := [][]string{
+		{"A", "B", "E"},
+		{"A", "C"},
+		{"A", "D", "F"},
+		{"A", "D", "G", "H"},
+		{"A", "D", "G", "I"},
+		{"A", "D", "G", "J"},
+		{"K", "L"},
+		{"K", "M"},
+	}
+	tree = FlatTreeToTree(deeperFlatTree)
+	assert.Equal(t, 2, len(tree.Children))                                     // A, K
+	assert.Equal(t, 3, len(tree.Children[0].Children))                         // B, C, D
+	assert.Equal(t, 3, len(tree.Children[0].Children[2].Children[1].Children)) // H, I, J
+
 }
