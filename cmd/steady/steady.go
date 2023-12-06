@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/jsnctl/steady/core"
+	"github.com/jsnctl/steady/pkg/core"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"strings"
 )
