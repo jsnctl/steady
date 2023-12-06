@@ -1,16 +1,19 @@
-package draw
+package core
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 type Node struct {
 	Name     string
+	IsRoot   bool
+	IsYaml   bool
 	Children []*Node
 }
 
 const RootName = "ROOT"
+
+func NewTree() *Node {
+	return &Node{Name: RootName, IsRoot: true}
+}
 
 func (n *Node) AddChild(prospective *Node) {
 	for _, child := range n.Children {
@@ -30,12 +33,15 @@ func FlatTreeToTree(flatTree [][]string) *Node {
 			flatNodes[branchIndex][nodeIndex] = &Node{
 				Name: nodeName,
 			}
+			if strings.HasSuffix(nodeName, ".yaml") {
+				flatNodes[branchIndex][nodeIndex].IsYaml = true
+			}
 		}
 	}
-	tree := Node{Name: RootName}
-	pointer := &tree
+	tree := NewTree()
+	pointer := tree
 	for branchIndex, branch := range flatTree {
-		pointer = &tree
+		pointer = tree
 		for nodeIndex := range branch {
 			pointer.AddChild(flatNodes[branchIndex][nodeIndex])
 			newPointer := pointer.Children[len(pointer.Children)-1]
@@ -43,18 +49,5 @@ func FlatTreeToTree(flatTree [][]string) *Node {
 		}
 	}
 
-	return &tree
-}
-
-func Draw(node *Node, shift int) {
-	if node.Name != RootName {
-		if shift <= 1 {
-			fmt.Println(strings.Repeat(" ", shift*5), node.Name)
-		} else {
-			fmt.Println(strings.Repeat(" ", shift*5), "\\ "+node.Name)
-		}
-	}
-	for _, node := range node.Children {
-		Draw(node, shift+1)
-	}
+	return tree
 }

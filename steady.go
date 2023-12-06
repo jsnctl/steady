@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/jsnctl/steady/draw"
+	"github.com/jsnctl/steady/core"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"strings"
 )
 
 const DefaultChart = "charts/example"
+const Version = "0.0.1"
 
 func main() {
 	chart, err := loader.Load(DefaultChart)
@@ -22,8 +23,10 @@ func main() {
 		flatTree = append(flatTree, split)
 	}
 
-	tree := draw.FlatTreeToTree(flatTree)
-
+	fmt.Println("Steady v" + Version)
 	fmt.Println("")
-	draw.Draw(tree, 0)
+
+	tree := core.FlatTreeToTree(flatTree)
+	core.Draw(tree, 0)
+	fmt.Println("")
 }
