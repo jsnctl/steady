@@ -5,6 +5,7 @@ type Node struct {
 	FormattedName string
 	IsRoot        bool
 	IsYaml        bool
+	IsValuesFile  bool
 	Data          []uint8
 	Children      []*Node
 }

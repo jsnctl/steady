@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/jsnctl/steady/pkg/core"
-	"gopkg.in/yaml.v2"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"strings"
 )
@@ -36,14 +35,4 @@ func main() {
 	core.Draw(tree, 0)
 	fmt.Println("")
 
-	rootValues := core.GetRootValuesNode(tree)
-	var valuesData core.ValuesData
-	err = yaml.Unmarshal(rootValues.Data, &valuesData)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("Images (from ./values.yaml):")
-	formattedImage := fmt.Sprintf("\x1b[%dm%s\x1b[0m", 95, valuesData.Image.Repository)
-	fmt.Println("- " + formattedImage)
 }

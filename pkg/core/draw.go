@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"strings"
 )
 
@@ -12,6 +13,15 @@ func Draw(node *Node, depth int) {
 		// nothing
 	} else {
 		writeLine(node.FormattedName, depth)
+		if node.IsValuesFile {
+			var valuesData ValuesData
+			err := yaml.Unmarshal(node.Data, &valuesData)
+			if err != nil {
+				panic(err)
+			}
+			formattedImage := fmt.Sprintf("\x1b[%dm%s\x1b[0m", 95, valuesData.Image.Repository)
+			writeLine(formattedImage, depth+1)
+		}
 	}
 	for _, node := range node.Children {
 		Draw(node, depth+1)

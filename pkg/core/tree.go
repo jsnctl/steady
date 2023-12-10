@@ -23,6 +23,9 @@ func FlatTreeToTree(flatTree []ChartFileMeta) *Node {
 				node.IsYaml = true
 				node.FormattedName = fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, node.Name)
 			}
+			if nodeName == "values.yaml" {
+				node.IsValuesFile = true
+			}
 			flatNodes[branchIndex][nodeIndex] = node
 		}
 	}
