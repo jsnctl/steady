@@ -1,12 +1,23 @@
 package core
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Node struct {
-	Name     string
-	IsRoot   bool
-	IsYaml   bool
-	Children []*Node
+	Name          string
+	FormattedName string
+	IsRoot        bool
+	IsYaml        bool
+	Data          []uint8
+	Children      []*Node
+}
+
+type ChartFileMeta struct {
+	Path []string
+	Name string
+	Data []uint8
 }
 
 const RootName = "ROOT"
@@ -25,24 +36,28 @@ func (n *Node) AddChild(prospective *Node) {
 	n.Children = append(n.Children, prospective)
 }
 
-func FlatTreeToTree(flatTree [][]string) *Node {
+func FlatTreeToTree(flatTree []ChartFileMeta) *Node {
 	var flatNodes [][]*Node
 	for branchIndex, branch := range flatTree {
-		flatNodes = append(flatNodes, make([]*Node, len(branch)))
-		for nodeIndex, nodeName := range branch {
-			flatNodes[branchIndex][nodeIndex] = &Node{
-				Name: nodeName,
+		flatNodes = append(flatNodes, make([]*Node, len(branch.Path)))
+		for nodeIndex, nodeName := range branch.Path {
+			node := &Node{
+				Name:          nodeName,
+				FormattedName: nodeName, // pre-formatting default
+				Data:          branch.Data,
 			}
 			if strings.HasSuffix(nodeName, ".yaml") {
-				flatNodes[branchIndex][nodeIndex].IsYaml = true
+				node.IsYaml = true
+				node.FormattedName = fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, node.Name)
 			}
+			flatNodes[branchIndex][nodeIndex] = node
 		}
 	}
 	tree := NewTree()
 	pointer := tree
 	for branchIndex, branch := range flatTree {
 		pointer = tree
-		for nodeIndex := range branch {
+		for nodeIndex := range branch.Path {
 			pointer.AddChild(flatNodes[branchIndex][nodeIndex])
 			newPointer := pointer.Children[len(pointer.Children)-1]
 			pointer = newPointer

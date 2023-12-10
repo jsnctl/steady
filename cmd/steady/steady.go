@@ -17,10 +17,15 @@ func main() {
 		fmt.Errorf(err.Error())
 	}
 
-	var flatTree [][]string
+	var flatTree []core.ChartFileMeta
 	for _, f := range chart.Raw {
 		split := strings.Split(f.Name, "/")
-		flatTree = append(flatTree, split)
+		chartFileMeta := core.ChartFileMeta{
+			Path: split,
+			Name: f.Name,
+			Data: f.Data,
+		}
+		flatTree = append(flatTree, chartFileMeta)
 	}
 
 	fmt.Println("Steady v" + Version)

@@ -66,10 +66,10 @@ func TestAddChild_MultipleChildrenOfNonRoot(t *testing.T) {
 }
 
 func TestFlatTreeToTree(t *testing.T) {
-	flatTree := [][]string{
-		{"A", "B"},
-		{"A", "C", "D"},
-		{"A", "C", "E"},
+	flatTree := []ChartFileMeta{
+		{Path: []string{"A", "B"}},
+		{Path: []string{"A", "C", "D"}},
+		{Path: []string{"A", "C", "E"}},
 	}
 	tree := FlatTreeToTree(flatTree)
 	assert.Equal(t, 2, len(tree.Children[0].Children))             // B, C
@@ -84,15 +84,15 @@ func TestFlatTreeToTree(t *testing.T) {
 					/|\
 		           H I J
 	*/
-	deeperFlatTree := [][]string{
-		{"A", "B", "E"},
-		{"A", "C"},
-		{"A", "D", "F"},
-		{"A", "D", "G", "H"},
-		{"A", "D", "G", "I"},
-		{"A", "D", "G", "J"},
-		{"K", "L"},
-		{"K", "M"},
+	deeperFlatTree := []ChartFileMeta{
+		{Path: []string{"A", "B", "E"}},
+		{Path: []string{"A", "C"}},
+		{Path: []string{"A", "D", "F"}},
+		{Path: []string{"A", "D", "G", "H"}},
+		{Path: []string{"A", "D", "G", "I"}},
+		{Path: []string{"A", "D", "G", "J"}},
+		{Path: []string{"K", "L"}},
+		{Path: []string{"K", "M"}},
 	}
 	tree = FlatTreeToTree(deeperFlatTree)
 	assert.Equal(t, 2, len(tree.Children))                                     // A, K

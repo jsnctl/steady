@@ -11,10 +11,7 @@ func Draw(node *Node, depth int) {
 	if node.IsRoot {
 		// nothing
 	} else {
-		if node.IsYaml {
-			node.Name = fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, node.Name)
-		}
-		writeLine(node.Name, depth)
+		writeLine(node.FormattedName, depth)
 	}
 	for _, node := range node.Children {
 		Draw(node, depth+1)
